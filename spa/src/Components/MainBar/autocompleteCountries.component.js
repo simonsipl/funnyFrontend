@@ -1,7 +1,6 @@
 import React from 'react';
-import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles, TextField } from '@material-ui/core';
 
 // ISO 3166-1 alpha-2
 // ⚠️ No support for IE 11
@@ -21,20 +20,13 @@ const useStyles = makeStyles({
     },
 });
 
-const inputChange = (e) => {
-    e.preventDefault()
-    this.setState({
-        countryName: e.target.value,
-    });
-};
-
-
-const CountryInput = ({ countries}) => {
+const CountryInput = ({ countries, onInput }) => {
     const classes = useStyles();
+
     return (
         <Autocomplete
             id="country"
-            style={{width: 300}}
+            style={{ width: 300 }}
             options={countries}
             classes={{
                 option: classes.option,
@@ -57,6 +49,7 @@ const CountryInput = ({ countries}) => {
                         ...params.inputProps,
                         autoComplete: 'disabled',
                     }}
+                    onSelect={onInput}
                 />
             )}
         />

@@ -20,29 +20,68 @@ const styles = theme => ({
     position: 'relative',
     width: '100%',
     backgroundColor: 'lightblue'
+  },
+  appBarText: {
+    color: 'white',
+    fontSize: '1.4rem',
   }
 })
 
 class App extends Component {
+  // Maybe i should fetch all countries and just enable those 4. but it was quicker
+
   state = {
     countries: [
       {
-        "code": "AU",
-        "name": "Australia"
+        "code": "PL",
+        "name": "Poland"
       },
       {
-        "code": "BR",
-        "name": "Brazil"
+        "code": "DE",
+        "name": "Germany"
+      },
+      {
+        "code": "FR",
+        "name": "France"
+      },
+      {
+        "code": "ES",
+        "name": "Spain"
       },
     ],
   }
 
   getCountryNameHandler = (e) => {
     e.preventDefault()
-      this.setState({
-        countryName: e.target.value,
-      });
+    this.setState({
+      countryName: e.target.value,
+    });
   }
+
+  getTenMostPollutedCities = async (e) => {
+    const { countries, countryName } = this.state;
+
+    if (!countryName) return
+
+    const countryCode = countries.find(country => country.name === countryName)
+    let url = new URL('https://api.openaq.org/v1/cities');
+    // this might be adjusted later for filter as selected sorting etc.
+    const params = {
+      country: countryCode.code,
+      limit: 10,
+      order_by: 'count',
+      sort: 'desc'
+    }
+    url.search = new URLSearchParams(params).toString();
+
+    const response = await fetch(url);
+    const body = await response.json();
+    
+    this.setState({
+      cities: body.results.map(results => results.name)
+    })
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -50,7 +89,7 @@ class App extends Component {
         <BackgroundContainer>
           <AppBar className={classes.searchBar}>
             <Toolbar>
-              <Typography variant="h6" noWrap>
+              <Typography className={classes.appBarText} noWrap>
                 Countries and Cities
                         </Typography>
               <div className={classes.search}>
@@ -58,6 +97,9 @@ class App extends Component {
               </div>
             </Toolbar>
           </AppBar>
+
+          <div onClick={this.getTenMostPollutedCities}>TEST</div>
+         In progress adding new component to handle visualisation of cities desc
         </BackgroundContainer>
       </div>
     )

@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './App.css';
 import { AppBar, Toolbar, Typography, withStyles } from '@material-ui/core';
-import BackgroundContainer from '../Components/Background/backgroundContainer.component'
-import CountryInput from '../Components/MainBar/autocompleteCountries.component'
+import BackgroundContainer from '../Components/Background/backgroundContainer.component';
+import CountryInput from '../Components/MainBar/autocompleteCountries.component';
+import AccordionList from '../Components/Accordion/accordionList.component';
 
 const styles = theme => ({
   search: {
@@ -49,6 +50,7 @@ class App extends Component {
         "name": "Spain"
       },
     ],
+    cities: []
   }
 
   getCountryNameHandler = (e) => {
@@ -64,6 +66,8 @@ class App extends Component {
     if (!countryName) return
 
     const countryCode = countries.find(country => country.name === countryName)
+    if (!countryCode) return
+
     let url = new URL('https://api.openaq.org/v1/cities');
     // this might be adjusted later for filter as selected sorting etc.
     const params = {
@@ -73,14 +77,20 @@ class App extends Component {
       sort: 'desc'
     }
     url.search = new URLSearchParams(params).toString();
-
     const response = await fetch(url);
     const body = await response.json();
-    
+
     this.setState({
       cities: body.results.map(results => results.name)
     })
   }
+  async componentDidMount() {
+    this.getTenMostPollutedCities()
+  };
+
+  async componentDidUpdate() {
+    this.getTenMostPollutedCities()
+  };
 
   render() {
     const { classes } = this.props;
@@ -97,9 +107,7 @@ class App extends Component {
               </div>
             </Toolbar>
           </AppBar>
-
-          <div onClick={this.getTenMostPollutedCities}>TEST</div>
-         In progress adding new component to handle visualisation of cities desc
+          <AccordionList cities={this.state.cities}></AccordionList>
         </BackgroundContainer>
       </div>
     )

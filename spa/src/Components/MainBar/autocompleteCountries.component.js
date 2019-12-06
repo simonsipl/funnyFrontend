@@ -20,8 +20,9 @@ const useStyles = makeStyles({
     },
 });
 
-const CountryInput = ({ countries, onInput }) => {
+const CountryInput = ({ countries, onInput, onBlur }) => {
     const classes = useStyles();
+    
 
     return (
         <Autocomplete
@@ -52,7 +53,7 @@ const CountryInput = ({ countries, onInput }) => {
                     onSelect={onInput}
                 />
             )}
-        />
+        />  
     );
 };
 

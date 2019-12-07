@@ -83,13 +83,19 @@ class App extends Component {
     this.setState({
       cities: body.results.map(results => results.name)
     })
+
+    return body;
   }
   async componentDidMount() {
-    this.getTenMostPollutedCities()
+    await this.getTenMostPollutedCities()
   };
 
   async componentDidUpdate() {
-    this.getTenMostPollutedCities()
+    if (localStorage.getItem('country') !== this.state.countryName) {
+      await this.getTenMostPollutedCities()
+      localStorage.setItem('country', this.state.countryName);
+    }
+
   };
 
   render() {

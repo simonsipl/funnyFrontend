@@ -20,10 +20,8 @@ const useStyles = makeStyles({
     },
 });
 
-const CountryInput = ({ countries, onInput, onBlur }) => {
+const CountryInput = ({ countries, onInput }) => {
     const classes = useStyles();
-    
-
     return (
         <Autocomplete
             id="country"
@@ -40,7 +38,8 @@ const CountryInput = ({ countries, onInput, onBlur }) => {
                     {option.name}
                 </React.Fragment>
             )}
-            renderInput={params => (
+
+            renderInput={(params) => (
                 <TextField
                     {...params}
                     label="Choose a country"
@@ -53,7 +52,7 @@ const CountryInput = ({ countries, onInput, onBlur }) => {
                     onSelect={onInput}
                 />
             )}
-        />  
+        />
     );
 };
 

@@ -34,21 +34,21 @@ class Panel extends Component {
         return extract
     }
 
-    componentDidMount() {
-        this.getCityDescription(this.props.city)
-            .then(res => this.setState({
-                city: this.props.city,
-                description: res
-            }))
+    async componentDidMount() {
+        const desc = await this.getCityDescription(this.props.city)
+        this.setState({
+            city: this.props.city,
+            description: desc
+        })
     }
 
-    componentDidUpdate() {
-       
+    async componentDidUpdate() {
         if (this.props.city !== this.state.city) {
-            this.getCityDescription(this.props.city).then(res => this.setState({
+            const desc = await this.getCityDescription(this.props.city)
+            this.setState({
                 city: this.props.city,
-                description: res
-            }))
+                description: desc
+            })
         }
     }
 

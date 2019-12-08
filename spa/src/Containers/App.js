@@ -50,7 +50,8 @@ class App extends Component {
         "name": "Spain"
       },
     ],
-    cities: []
+    // Bit risky, but works ;) 
+    cities: localStorage.getItem('cities') ? JSON.parse(localStorage.getItem('cities')) : []
   }
 
   getCountryNameHandler = (e) => {
@@ -79,10 +80,12 @@ class App extends Component {
     url.search = new URLSearchParams(params).toString();
     const response = await fetch(url);
     const body = await response.json();
+    const citiesArr = body.results.map(results => results.name)
 
     this.setState({
-      cities: body.results.map(results => results.name)
+      cities: citiesArr
     })
+    localStorage.setItem('cities', JSON.stringify(citiesArr));
 
     return body;
   }
@@ -95,7 +98,6 @@ class App extends Component {
       await this.getTenMostPollutedCities()
       localStorage.setItem('country', this.state.countryName);
     }
-
   };
 
   render() {
